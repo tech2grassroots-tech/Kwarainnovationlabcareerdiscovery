@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kwara Innovation Lab Tech Career Discovery</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #C9A84C; --gold-light: #E8D5A3; --gold-dark: #8B6914;
+    --ink: #1A1814; --ink-soft: #3D3830; --mist: #F7F5F0;
+    --mist-dark: #EDE9E0; --cream: #FDFAF4; --border: rgba(201,168,76,0.25);
+    --border-hover: rgba(201,168,76,0.6); --text-muted: #7A7468; --r: 4px;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; overflow-x: hidden; }
+
+  .hero { background: var(--ink); padding: 64px 32px 56px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%); pointer-events: none; }
+  .hero-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+  .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 6vw, 64px); font-weight: 300; color: #F7F5F0; line-height: 1.1; margin-bottom: 16px; }
+  .hero h1 em { font-style: italic; color: var(--gold-light); }
+  .hero p { font-size: 15px; color: rgba(247,245,240,0.55); max-width: 480px; margin: 0 auto; line-height: 1.7; font-weight: 300; }
+  .hero-sub { display: inline-block; margin-top: 16px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(201,168,76,0.6); border: 1px solid rgba(201,168,76,0.2); padding: 4px 14px; border-radius: 100px; }
+  .hero-line { width: 48px; height: 1px; background: var(--gold); margin: 20px auto 0; opacity: 0.5; }
+
+  .progress-bar-wrap { background: var(--ink); padding: 0 32px 24px; position: sticky; top: 0; z-index: 100; }
+  .steps-row { max-width: 720px; margin: 0 auto; display: flex; align-items: center; }
+  .step-dot { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; cursor: pointer; transition: opacity 0.2s; }
+  .step-dot:not(.active):not(.done) { opacity: 0.35; }
+  .dot-circle { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--gold); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--gold); transition: all 0.3s; background: transparent; }
+  .step-dot.done .dot-circle { background: var(--gold); color: var(--ink); }
+  .step-dot.active .dot-circle { background: rgba(201,168,76,0.15); box-shadow: 0 0 0 4px rgba(201,168,76,0.12); }
+  .dot-label { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold-light); white-space: nowrap; }
+  .step-line { flex: 1; height: 1px; background: rgba(201,168,76,0.2); position: relative; top: -10px; transition: background 0.3s; }
+  .step-line.done { background: rgba(201,168,76,0.6); }
+
+  .form-container { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+  .section-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 36px 40px; margin-bottom: 24px; display: none; animation: fadeUp 0.4s ease forwards; }
+  .section-card.active { display: block; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-tag { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 8px; }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; color: var(--ink); margin-bottom: 32px; line-height: 1.2; }
+
+  .field-group { margin-bottom: 24px; }
+  label.field-label { display: block; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+  input[type="text"], input[type="email"], input[type="tel"], select { width: 100%; height: 44px; padding: 0 14px; border: 1px solid var(--border); border-radius: var(--r); background: var(--mist); font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink); outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+  input:focus, select:focus { border-color: var(--gold); background: white; box-shadow: 0 0 0 3px rgba(201,168,76,0.08); }
+  select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7468' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .radio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+  .radio-card { display: none; }
+  .radio-card + label { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--r); cursor: pointer; font-size: 13px; color: var(--ink-soft); transition: all 0.18s; background: var(--mist); user-select: none; }
+  .radio-card + label::before { content: ''; width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--border-hover); flex-shrink: 0; transition: all 0.18s; }
+  .radio-card:checked + label { border-color: var(--gold); background: rgba(201,168,76,0.06); color: var(--ink); font-weight: 500; }
+  .radio-card:checked + label::before { border-color: var(--gold); background: var(--gold); box-shadow: inset 0 0 0 3px white; }
+
+  .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip-input { display: none; }
+  .chip-label { padding: 8px 16px; border: 1px solid var(--border); border-radius: 100px; font-size: 13px; color: var(--ink-soft); cursor: pointer; transition: all 0.18s; background: var(--mist); user-select: none; }
+  .chip-input:checked + .chip-label { background: var(--gold); border-color: var(--gold); color: var(--ink); font-weight: 500; }
+
+  .question-label { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 14px; display: flex; gap: 8px; align-items: flex-start; }
+  .q-num { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--gold); line-height: 1; flex-shrink: 0; }
+
+  .form-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; }
+  .btn { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 12px 28px; border-radius: var(--r); cursor: pointer; transition: all 0.2s; border: none; letter-spacing: 0.04em; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+  .btn-ghost:hover { border-color: var(--border-hover); color: var(--ink); }
+  .btn-primary { background: var(--gold); color: var(--ink); box-shadow: 0 2px 12px rgba(201,168,76,0.25); }
+  .btn-primary:hover { background: #B8932E; transform: translateY(-1px); }
+  .btn-submit { background: var(--ink); color: var(--gold-light); padding: 14px 36px; font-size: 14px; }
+  .btn-submit:hover { background: var(--ink-soft); transform: translateY(-1px); }
+
+  #results-panel { display: none; animation: fadeUp 0.5s ease forwards; }
+  .results-hero { background: var(--ink); border-radius: 12px; padding: 40px; text-align: center; margin-bottom: 24px; position: relative; overflow: hidden; }
+  .results-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201,168,76,0.15) 0%, transparent 70%); pointer-events: none; }
+  .results-hero h2 { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; color: #F7F5F0; margin-bottom: 8px; }
+  .results-hero p { font-size: 14px; color: rgba(247,245,240,0.5); font-weight: 300; }
+  .name-badge { display: inline-block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,168,76,0.3); padding: 5px 16px; border-radius: 100px; margin-bottom: 20px; }
+
+  .insight-box { background: rgba(201,168,76,0.05); border: 1px solid var(--border); border-radius: 10px; padding: 24px 28px; margin-bottom: 24px; }
+  .insight-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 8px; }
+  .insight-text { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 400; color: var(--ink-soft); line-height: 1.75; font-style: italic; }
+
+  .section-divider { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin: 32px 0 16px; display: flex; align-items: center; gap: 12px; }
+  .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .confidence-warn { background: #FFF8E6; border: 1px solid rgba(201,168,76,0.4); border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #8B6914; margin-bottom: 20px; display: none; }
+
+  .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .course-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 24px; transition: all 0.2s; opacity: 0; transform: translateY(12px); animation: fadeUp 0.4s ease forwards; }
+  .course-card:hover { border-color: var(--border-hover); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(26,24,20,0.08); }
+  .course-rank { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: var(--gold-light); line-height: 1; margin-bottom: 8px; }
+  .course-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 500; color: var(--ink); margin-bottom: 4px; line-height: 1.25; }
+  .course-fit { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 12px; font-weight: 500; }
+
+  .match-bar-wrap { margin-bottom: 14px; }
+  .match-bar-label { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .match-bar-label span:first-child { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+  .match-score-val { font-size: 12px; font-weight: 600; color: var(--gold-dark); }
+  .match-bar-track { height: 3px; background: var(--mist-dark); border-radius: 2px; overflow: hidden; }
+  .match-bar-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); width: 0%; }
+
+  .course-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 10px; }
+  .course-why { font-size: 12px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 12px; padding: 10px 12px; background: rgba(201,168,76,0.04); border-left: 2px solid var(--gold); border-radius: 0 4px 4px 0; }
+  .course-step { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; }
+  .course-step strong { color: var(--ink-soft); }
+  .course-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .course-tag { font-size: 10px; padding: 3px 10px; border-radius: 100px; background: var(--mist); color: var(--ink-soft); border: 1px solid var(--mist-dark); }
+
+  .no-match-msg { text-align: center; padding: 32px; font-size: 14px; color: var(--text-muted); font-style: italic; }
+  .restart-btn { display: block; text-align: center; margin-top: 32px; font-size: 12px; color: var(--text-muted); cursor: pointer; text-decoration: underline; background: none; border: none; font-family: 'DM Sans', sans-serif; }
+  .restart-btn:hover { color: var(--ink); }
+  .version-badge { position: fixed; bottom: 16px; right: 16px; font-size: 10px; background: var(--ink); color: var(--gold); padding: 5px 12px; border-radius: 100px; letter-spacing: 0.1em; text-transform: uppercase; z-index: 999; }
+
+  @media (max-width: 600px) {
+    .section-card { padding: 24px 20px; }
+    .two-col { grid-template-columns: 1fr; }
+    .progress-bar-wrap { padding: 0 16px 20px; }
+    .form-container { padding: 32px 16px 60px; }
+    .dot-label { display: none; }
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <p class="hero-eyebrow">Kwara Innovation Lab · Career Discovery</p>
+  <h1>Find Your <em>Path</em><br>in Tech</h1>
+  <p>Answer a few questions and our smart matching engine will map your personality and interests to the right tech career.</p>
+  <div class="hero-line"></div>
+</header>
+
+<div class="progress-bar-wrap">
+  <div class="steps-row">
+    <div class="step-dot active" data-step="1"><div class="dot-circle">1</div><span class="dot-label">About</span></div>
+    <div class="step-line" id="line-1"></div>
+    <div class="step-dot" data-step="2"><div class="dot-circle">2</div><span class="dot-label">Awareness</span></div>
+    <div class="step-line" id="line-2"></div>
+    <div class="step-dot" data-step="3"><div class="dot-circle">3</div><span class="dot-label">Interests</span></div>
+    <div class="step-line" id="line-3"></div>
+    <div class="step-dot" data-step="4"><div class="dot-circle">4</div><span class="dot-label">Careers</span></div>
+  </div>
+</div>
+
+<div class="form-container">
+  <!-- SECTION 1 -->
+  <div class="section-card active" id="section-1">
+    <p class="section-tag">Section 1 of 4</p>
+    <h2 class="section-title">Let's start with the basics</h2>
+    <div class="two-col">
+      <div class="field-group"><label class="field-label" for="full-name">Full Name</label><input type="text" id="full-name" placeholder="Your full name"></div>
+      <div class="field-group"><label class="field-label" for="age-range">Age Range</label>
+        <select id="age-range"><option value="">Select age range</option><option>Under 18</option><option>18 – 22</option><option>23 – 27</option><option>28 – 35</option><option>36 – 45</option><option>45+</option></select>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="field-group"><label class="field-label" for="phone">Phone Number</label><input type="tel" id="phone" placeholder="+234 000 000 0000"></div>
+      <div class="field-group"><label class="field-label" for="email">Email Address</label><input type="email" id="email" placeholder="you@email.com"></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Current Status</label>
+      <div class="radio-grid">
+        <input type="radio" name="status" id="s-student" value="Student" class="radio-card"><label for="s-student">Student (Undergraduate)</label>
+        <input type="radio" name="status" id="s-grad" value="Graduate" class="radio-card"><label for="s-grad">Graduate</label>
+        <input type="radio" name="status" id="s-nysc" value="NYSC" class="radio-card"><label for="s-nysc">NYSC</label>
+        <input type="radio" name="status" id="s-working" value="Working Professional" class="radio-card"><label for="s-working">Working Professional</label>
+        <input type="radio" name="status" id="s-biz" value="Business Owner" class="radio-card"><label for="s-biz">Business Owner</label>
+        <input type="radio" name="status" id="s-other" value="Other" class="radio-card"><label for="s-other">Other</label>
+      </div>
+    </div>
+    <div class="form-nav"><span></span><button class="btn btn-primary" onclick="goTo(2)">Continue →</button></div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card" id="section-2">
+    <p class="section-tag">Section 2 of 4</p>
+    <h2 class="section-title">Your awareness of tech</h2>
+    <div class="field-group">
+      <div class="question-label"><span class="q-num">1.</span><span>How familiar are you with tech careers?</span></div>
+      <div class="radio-grid">
+        <input type="radio" name="familiarity" id="f1" value="Very familiar" class="radio-card"><label for="f1">Very familiar</label>
+        <input type="radio" name="familiarity" id="f2" value="Slightly familiar" class="radio-card"><label for="f2">Slightly familiar</label>
+        <input type="radio" name="familiarity" id="f3" value="Beginner" class="radio-card"><label for="f3">Beginner</label>
+        <input type="radio" name="familiarity" id="f4" value="Know almost nothing" class="radio-card"><label for="f4">I know almost nothing</label>
+      </div>
+    </div>
+    <div class="field-group" style="margin-top:28px">
+      <div class="question-label"><span class="q-num">2.</span><span>Why are you interested in tech? <span style="color:var(--text-muted);font-weight:300">(select all that apply)</span></span></div>
+      <div class="chip-grid">
+        <input type="checkbox" id="r-remote" value="remote" class="chip-input"><label for="r-remote" class="chip-label">Remote work</label>
+        <input type="checkbox" id="r-income" value="income" class="chip-input"><label for="r-income" class="chip-label">High income</label>
+        <input type="checkbox" id="r-creative" value="creative" class="chip-input"><label for="r-creative" class="chip-label">Creativity</label>
+        <input type="checkbox" id="r-problem" value="problem" class="chip-input"><label for="r-problem" class="chip-label">Problem-solving</label>
+        <input type="checkbox" id="r-switch" value="switch" class="chip-input"><label for="r-switch" class="chip-label">Career switch</label>
+        <input type="checkbox" id="r-curious" value="curious" class="chip-input"><label for="r-curious" class="chip-label">Curiosity</label>
+        <input type="checkbox" id="r-entrepreneur" value="entrepreneur" class="chip-input"><label for="r-entrepreneur" class="chip-label">Entrepreneurship</label>
+        <input type="checkbox" id="r-jobs" value="jobs" class="chip-input"><label for="r-jobs" class="chip-label">Job opportunities</label>
+      </div>
+    </div>
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="goTo(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(3)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card" id="section-3">
+    <p class="section-tag">Section 3 of 4</p>
+    <h2 class="section-title">Interests & personality</h2>
+    <div class="field-group">
+      <div class="question-label"><span class="q-num">3.</span><span>Which activities sound most interesting? <span style="color:var(--text-muted);font-weight:300">(select all that apply)</span></span></div>
+      <div class="chip-grid">
+        <input type="checkbox" id="a-design" value="design" class="chip-input"><label for="a-design" class="chip-label">Designing apps/websites</label>
+        <input type="checkbox" id="a-content" value="writing" class="chip-input"><label for="a-content" class="chip-label">Writing content</label>
+        <input type="checkbox" id="a-logic" value="logic" class="chip-input"><label for="a-logic" class="chip-label">Solving logical problems</label>
+        <input type="checkbox" id="a-data" value="data" class="chip-input"><label for="a-data" class="chip-label">Analyzing data</label>
+        <input type="checkbox" id="a-teach" value="teaching" class="chip-input"><label for="a-teach" class="chip-label">Teaching people</label>
+        <input type="checkbox" id="a-manage" value="managing" class="chip-input"><label for="a-manage" class="chip-label">Managing projects</label>
+        <input type="checkbox" id="a-customer" value="people" class="chip-input"><label for="a-customer" class="chip-label">Talking to customers</label>
+        <input type="checkbox" id="a-marketing" value="marketing" class="chip-input"><label for="a-marketing" class="chip-label">Marketing products</label>
+        <input type="checkbox" id="a-visual" value="visual" class="chip-input"><label for="a-visual" class="chip-label">Creating videos/graphics</label>
+        <input type="checkbox" id="a-build" value="building" class="chip-input"><label for="a-build" class="chip-label">Building websites/apps</label>
+      </div>
+    </div>
+    <div class="field-group" style="margin-top:28px">
+      <div class="question-label"><span class="q-num">4.</span><span>Which best describes you?</span></div>
+      <div class="radio-grid">
+        <input type="radio" name="personality" id="p-creative" value="creative" class="radio-card"><label for="p-creative">Creative</label>
+        <input type="radio" name="personality" id="p-analytical" value="analytical" class="radio-card"><label for="p-analytical">Analytical</label>
+        <input type="radio" name="personality" id="p-organized" value="organized" class="radio-card"><label for="p-organized">Organized</label>
+        <input type="radio" name="personality" id="p-people" value="people" class="radio-card"><label for="p-people">People-oriented</label>
+        <input type="radio" name="personality" id="p-detail" value="detail" class="radio-card"><label for="p-detail">Detail-oriented</label>
+        <input type="radio" name="personality" id="p-curious" value="curious" class="radio-card"><label for="p-curious">Curious</label>
+        <input type="radio" name="personality" id="p-comm" value="communicator" class="radio-card"><label for="p-comm">Good communicator</label>
+      </div>
+    </div>
+    <div class="field-group" style="margin-top:28px">
+      <div class="question-label"><span class="q-num">5.</span><span>What kind of work environment do you prefer?</span></div>
+      <div class="radio-grid">
+        <input type="radio" name="environment" id="e-people" value="collaborative" class="radio-card"><label for="e-people">Working with people</label>
+        <input type="radio" name="environment" id="e-solo" value="independent" class="radio-card"><label for="e-solo">Working independently</label>
+        <input type="radio" name="environment" id="e-lead" value="leading" class="radio-card"><label for="e-lead">Leading teams</label>
+        <input type="radio" name="environment" id="e-creative" value="creative" class="radio-card"><label for="e-creative">Creative environments</label>
+        <input type="radio" name="environment" id="e-structured" value="structured" class="radio-card"><label for="e-structured">Structured problem-solving</label>
+      </div>
+    </div>
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="goTo(2)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(4)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card" id="section-4">
+    <p class="section-tag">Section 4 of 4</p>
+    <h2 class="section-title">Career matching</h2>
+    <div class="field-group">
+      <div class="question-label"><span class="q-num">6.</span><span>Which of these would you enjoy most?</span></div>
+      <div class="radio-grid">
+        <input type="radio" name="enjoy" id="en-design" value="design" class="radio-card"><label for="en-design">Designing interfaces</label>
+        <input type="radio" name="enjoy" id="en-code" value="coding" class="radio-card"><label for="en-code">Coding & building</label>
+        <input type="radio" name="enjoy" id="en-community" value="community" class="radio-card"><label for="en-community">Community/social media</label>
+        <input type="radio" name="enjoy" id="en-support" value="support" class="radio-card"><label for="en-support">Helping users</label>
+        <input type="radio" name="enjoy" id="en-teach" value="teaching" class="radio-card"><label for="en-teach">Teaching & training</label>
+        <input type="radio" name="enjoy" id="en-pm" value="managing" class="radio-card"><label for="en-pm">Managing projects</label>
+        <input type="radio" name="enjoy" id="en-data" value="data" class="radio-card"><label for="en-data">Data & research</label>
+        <input type="radio" name="enjoy" id="en-sales" value="business" class="radio-card"><label for="en-sales">Business & sales</label>
+      </div>
+    </div>
+    <div class="field-group" style="margin-top:28px">
+      <div class="question-label"><span class="q-num">7.</span><span>Which fields interest you? <span style="color:var(--text-muted);font-weight:300">(select all that apply)</span></span></div>
+      <div class="chip-grid">
+        <input type="checkbox" id="fi-uiux" value="uiux" class="chip-input"><label for="fi-uiux" class="chip-label">UI/UX Design</label>
+        <input type="checkbox" id="fi-proddesign" value="uiux" class="chip-input"><label for="fi-proddesign" class="chip-label">Product Design</label>
+        <input type="checkbox" id="fi-frontend" value="frontend" class="chip-input"><label for="fi-frontend" class="chip-label">Frontend Dev</label>
+        <input type="checkbox" id="fi-backend" value="backend" class="chip-input"><label for="fi-backend" class="chip-label">Backend Dev</label>
+        <input type="checkbox" id="fi-data" value="data" class="chip-input"><label for="fi-data" class="chip-label">Data Analysis</label>
+        <input type="checkbox" id="fi-cyber" value="cyber" class="chip-input"><label for="fi-cyber" class="chip-label">Cybersecurity</label>
+        <input type="checkbox" id="fi-pm" value="pm" class="chip-input"><label for="fi-pm" class="chip-label">Product Management</label>
+        <input type="checkbox" id="fi-digital" value="marketing" class="chip-input"><label for="fi-digital" class="chip-label">Digital Marketing</label>
+        <input type="checkbox" id="fi-community" value="community" class="chip-input"><label for="fi-community" class="chip-label">Community Mgmt</label>
+        <input type="checkbox" id="fi-writing" value="writing" class="chip-input"><label for="fi-writing" class="chip-label">Technical Writing</label>
+        <input type="checkbox" id="fi-graphics" value="uiux" class="chip-input"><label for="fi-graphics" class="chip-label">Graphics Design</label>
+        <input type="checkbox" id="fi-ai" value="ai" class="chip-input"><label for="fi-ai" class="chip-label">AI / Machine Learning</label>
+      </div>
+    </div>
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="goTo(3)">← Back</button>
+      <button class="btn btn-primary btn-submit" onclick="submitForm()">Discover My Career Path ✦</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-panel">
+    <div class="results-hero">
+      <div class="name-badge" id="result-name-badge">Your Results</div>
+      <h2>Your Tech Career Blueprint</h2>
+      <p>Matched by smart local scoring — instant & offline-ready</p>
+    </div>
+    <div id="ai-results">
+      <div id="confidence-warn" class="confidence-warn"></div>
+      <div class="insight-box">
+        <p class="insight-label">✦ Your Profile Insight</p>
+        <p class="insight-text" id="insight-text"></p>
+      </div>
+      <div class="section-divider">Recommended paths</div>
+      <div class="courses-grid" id="courses-grid"></div>
+      <button class="restart-btn" onclick="restartForm()">Start over →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentStep = 1;
+
+function goTo(step) {
+  document.getElementById(`section-${currentStep}`).classList.remove('active');
+  document.getElementById(`section-${step}`).classList.add('active');
+  updateProgress(step);
+  currentStep = step;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function updateProgress(step) {
+  document.querySelectorAll('.step-dot').forEach((dot, i) => {
+    const s = i + 1;
+    dot.classList.remove('active', 'done');
+    if (s < step) dot.classList.add('done');
+    else if (s === step) dot.classList.add('active');
+    dot.querySelector('.dot-circle').innerHTML = s < step ? '✓' : s;
+  });
+  for (let i = 1; i <= 3; i++) {
+    const l = document.getElementById(`line-${i}`);
+    if (i < step) l.classList.add('done'); else l.classList.remove('done');
+  }
+}
+function getChecked(name) { return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(e => e.value); }
+function getCheckedBoxes(prefix) { return [...new Set([...document.querySelectorAll(`input.chip-input[id^="${prefix}"]:checked`)].map(e => e.value))]; }
+function getVal(id) { return document.getElementById(id)?.value || ''; }
+
+// ─── TRAIT BUCKETS ─────────────────────────────────────────────────────────
+// Each career is defined by weighted trait buckets, not exact string matching.
+// A signal is a normalised keyword; multiple raw answers map to the same signal.
+// This lets "creative environment" and "creative personality" both contribute to
+// the 'creative' trait bucket for a career that values creativity.
+
+const CAREERS = [
+  {
+    id: 'uiux',
+    title: 'UI/UX Designer',
+    fitTagline: 'Design with purpose & empathy',
+    description: 'Create intuitive, beautiful interfaces that solve real problems. You\'ll wireframe, prototype, and iterate designs based on user research and feedback.',
+    whyTemplate: (n, p, e) => `Your ${p} streak and love for ${e} work suggests design thinking comes naturally — UX puts that right at the centre.`,
+    firstStep: 'Register for our ui/ux design bootcamp at Kwara Innovation Lab to get hands-on experience and mentorship.',
+    skills: ['Figma', 'User Research', 'Prototyping', 'Design Systems'],
+    // Trait buckets: each key maps to a weight
+    traits: { creative: 30, design: 30, visual: 20, people: 10, collaborative: 10 },
+    // Field tags that directly boost this career
+    fieldBoost: { uiux: 25 },
+    // Enjoy tag boost
+    enjoyBoost: { design: 20 },
+    // Negative signals (reduce score)
+    penalties: { independent: -5, structured: -5 }
+  },
+  {
+    id: 'frontend',
+    title: 'Frontend Developer',
+    fitTagline: 'Build beautiful, interactive web UIs',
+    description: 'Build the visual layer of web applications using HTML, CSS, and JavaScript frameworks like React. You\'ll turn designs into smooth, responsive experiences.',
+    whyTemplate: (n, p, e) => `Combining your ${p} nature with a love for ${e} work means frontend dev — where logic meets design — is a natural sweet spot.`,
+    firstStep: 'Register for our frontend development bootcamp at Kwara Innovation Lab to get hands-on experience and mentorship.',
+    skills: ['HTML/CSS', 'JavaScript', 'React', 'Responsive Design'],
+    traits: { building: 30, design: 20, logic: 20, creative: 15, structured: 15 },
+    fieldBoost: { frontend: 25, uiux: 10 },
+    enjoyBoost: { coding: 20, design: 10 },
+    penalties: { people: -5 }
+  },
+  {
+    id: 'backend',
+    title: 'Backend Developer',
+    fitTagline: 'Power the logic behind every app',
+    description: 'Design and build server-side systems, APIs, and databases that power applications. You\'ll work with Python, Node.js, and cloud infrastructure.',
+    whyTemplate: (n, p, e) => `Your ${p} mind and preference for ${e} work is perfect for backend dev — it rewards deep focus and systematic thinking.`,
+    firstStep: 'Register for our backend development bootcamp at Kwara Innovation Lab to get hands-on experience and mentorship.',
+    skills: ['Python / Node.js', 'Databases', 'REST APIs', 'Cloud Basics'],
+    traits: { logic: 35, analytical: 25, structured: 20, building: 15, independent: 15 },
+    fieldBoost: { backend: 25, ai: 10 },
+    enjoyBoost: { coding: 20, data: 10 },
+    penalties: { people: -8, creative: -5 }
+  },
+  {
+    id: 'data',
+    title: 'Data Analyst',
+    fitTagline: 'Turn raw data into clear decisions',
+    description: 'Extract patterns from complex datasets using SQL, Python, and tools like Tableau to help organisations make smarter, data-driven decisions.',
+    whyTemplate: (n, p, e) => `Your ${p} approach and interest in ${e} work aligns perfectly with data analysis — it\'s about finding the story hidden in numbers.`,
+    firstStep: 'Register for our data analysis bootcamp at Kwara Innovation Lab to get hands-on experience and mentorship.',
+    skills: ['SQL', 'Python / Excel', 'Tableau / Power BI', 'Statistics'],
+    traits: { analytical: 35, data: 35, logic: 20, detail: 20, structured: 15 },
+    fieldBoost: { data: 25, ai: 10 },
+    enjoyBoost: { data: 25 },
+    penalties: { creative: -5, people: -5 }
+  },
+  {
+    id: 'pm',
+    title: 'Product Manager',
+    fitTagline: 'Lead products from vision to launch',
+    description: 'Define product strategy, prioritise features, and coordinate between engineering, design, and business teams to ship products users love.',
+    whyTemplate: (n, p, e) => `Your ${p} style and comfort with ${e} work makes you ideal for product management — it needs someone who can hold both the big picture and the details.`,
+    firstStep: 'Register for our product management bootcamp at Kwara Innovation Lab to get hands-on experience and mentorship.',
+    skills: ['Strategy', 'Analytics', 'Roadmapping', 'Stakeholder Mgmt'],
+    traits: { managing: 30, people: 25, organized: 20, communicator: 20, leading: 20 },
+    fieldBoost: { pm: 25 },
+    enjoyBoost: { managing: 25, business: 10 },
+    penalties: { independent: -10, structured: -5 }
+  },
+  {
+    id: 'digital-marketing',
+    title: 'Digital Marketing Specialist',
+    fitTagline: 'Grow brands through data & creativity',
+    description: 'Run campaigns across social media, email, SEO, and paid ads. You\'ll blend creativity with analytics to drive user growth and engagement.',
+    whyTemplate: (n, p, e) => `Your ${p} energy and interest in ${e} work pairs well with digital marketing — the field rewards people who can think creatively AND read data.`,
+    firstStep: 'Register for our digital marketing bootcamp at Kwara Innovation Lab to get hands-on experience and mentorship.',
+    skills: ['SEO/SEM', 'Social Media', 'Google Analytics', 'Content Strategy'],
+    traits: { marketing: 30, creative: 20, people: 20, communicator: 15, data: 10 },
+    fieldBoost: { marketing: 25, community: 10 },
+    enjoyBoost: { business: 15, community: 10 },
+    penalties: { independent: -5, structured: -8 }
+  },
+  {
+    id: 'cyber',
+    title: 'Cybersecurity Specialist',
+    fitTagline: 'Protect systems and defend data',
+    description: 'Safeguard networks and systems from threats. You\'ll perform security audits, implement defences, and stay ahead of emerging vulnerabilities.',
+    whyTemplate: (n, p, e) => `Your ${p} nature and preference for ${e} work is a strong match for cybersecurity — it demands someone who thinks in systems and never misses a detail.`,
+    firstStep: 'Register for our cybersecurity bootcamp at Kwara Innovation Lab to get hands-on experience and mentorship.',
+    skills: ['Network Security', 'Ethical Hacking', 'Compliance', 'Threat Analysis'],
+    traits: { analytical: 30, detail: 30, logic: 25, structured: 20, independent: 10 },
+    fieldBoost: { cyber: 30 },
+    enjoyBoost: { data: 10, coding: 10 },
+    penalties: { people: -10, creative: -8 }
+  },
+  {
+    id: 'techwriting',
+    title: 'Technical Writer',
+    fitTagline: 'Make complex ideas crystal clear',
+    description: 'Transform technical concepts into clear, accessible documentation — API docs, user guides, and tutorials that developers and users actually love.',
+    whyTemplate: (n, p, e) => `Your ${p} approach and enjoyment of ${e} activities points to technical writing — it\'s the rare role where precision and clear communication are equally valued.`,
+    firstStep: 'Register for our technical writing bootcamp at Kwara Innovation Lab to get hands-on experience and mentorship.',
+    skills: ['Documentation', 'Markdown / DITA', 'Technical Clarity', 'User Research'],
+    traits: { writing: 35, detail: 25, communicator: 20, teaching: 15, organized: 15 },
+    fieldBoost: { writing: 30 },
+    enjoyBoost: { teaching: 15, support: 10 },
+    penalties: { building: -5 }
+  },
+  {
+    id: 'community',
+    title: 'Community Manager',
+    fitTagline: 'Build and nurture tech communities',
+    description: 'Grow and engage online and offline communities around products and brands. You\'ll run events, manage social channels, and be the voice of the brand.',
+    whyTemplate: (n, p, e) => `Your ${p} nature and love of ${e} work is tailor-made for community management — it needs someone who genuinely enjoys connecting people and driving conversation.`,
+    firstStep: 'Register for our community management bootcamp at Kwara Innovation Lab to get hands-on experience and mentorship.',
+    skills: ['Social Media', 'Event Planning', 'Content Creation', 'Engagement Strategy'],
+    traits: { people: 35, communicator: 30, marketing: 15, creative: 15, collaborative: 15 },
+    fieldBoost: { community: 30, marketing: 10 },
+    enjoyBoost: { community: 25, teaching: 10 },
+    penalties: { independent: -15, structured: -10 }
+  },
+  {
+    id: 'ai',
+    title: 'AI / ML Engineer',
+    fitTagline: 'Build intelligent, learning systems',
+    description: 'Develop machine learning models and AI-powered applications. You\'ll work with neural networks, data pipelines, and deploy models that solve real problems.',
+    whyTemplate: (n, p, e) => `Your ${p} mindset and curiosity about ${e} work suggests you\'re built for AI/ML — a field that rewards deep curiosity and systematic experimentation.`,
+    firstStep: 'Register for our AI / ML engineering bootcamp at Kwara Innovation Lab to get hands-on experience and mentorship.',
+    skills: ['Python', 'TensorFlow / PyTorch', 'Statistics', 'Data Engineering'],
+    traits: { analytical: 30, logic: 30, data: 25, curious: 20, independent: 15 },
+    fieldBoost: { ai: 30, data: 10, backend: 5 },
+    enjoyBoost: { data: 20, coding: 10 },
+    penalties: { people: -10, creative: -8 }
+  }
+];
+
+// ─── SIGNAL EXTRACTION ─────────────────────────────────────────────────────
+// Maps raw form values to normalised trait signals with weights.
+// Multiple raw values can emit the same signal — this is the "fuzzy" layer.
+
+function extractSignals(data) {
+  const signals = {};
+  function add(key, weight) { signals[key] = (signals[key] || 0) + weight; }
+
+  // Personality
+  const pMap = {
+    creative: 'creative', analytical: 'analytical', organized: 'organized',
+    people: 'people', detail: 'detail', curious: 'curious', communicator: 'communicator'
+  };
+  if (data.personality && pMap[data.personality]) add(pMap[data.personality], 30);
+
+  // Environment — also emits secondary trait
+  const eMap = {
+    collaborative: ['collaborative', 'people'],
+    independent:   ['independent'],
+    leading:       ['leading', 'people', 'managing'],
+    creative:      ['creative', 'design'],
+    structured:    ['structured', 'analytical']
+  };
+  (eMap[data.environment] || []).forEach(t => add(t, 15));
+
+  // Activities (each emits one or more trait signals)
+  const aMap = {
+    design:    ['design', 'creative', 'visual'],
+    writing:   ['writing', 'communicator'],
+    logic:     ['logic', 'analytical'],
+    data:      ['data', 'analytical'],
+    teaching:  ['teaching', 'communicator', 'people'],
+    managing:  ['managing', 'organized', 'people'],
+    people:    ['people', 'communicator'],
+    marketing: ['marketing', 'creative', 'people'],
+    visual:    ['visual', 'creative', 'design'],
+    building:  ['building', 'logic', 'structured']
+  };
+  data.activities.forEach(a => (aMap[a] || []).forEach(t => add(t, 10)));
+
+  // Enjoy (direct strong signal)
+  const enMap = {
+    design:    ['design', 'creative', 'visual'],
+    coding:    ['building', 'logic'],
+    community: ['people', 'communicator', 'marketing'],
+    support:   ['people', 'communicator', 'teaching'],
+    teaching:  ['teaching', 'communicator'],
+    managing:  ['managing', 'organized', 'leading'],
+    data:      ['data', 'analytical'],
+    business:  ['marketing', 'people', 'managing']
+  };
+  (enMap[data.enjoy] || []).forEach(t => add(t, 12));
+
+  // Why tech (secondary boost)
+  const wMap = {
+    creative:     ['creative'],
+    problem:      ['logic', 'analytical'],
+    entrepreneur: ['managing', 'marketing'],
+    curious:      ['curious', 'analytical'],
+    income:       [], remote: [], switch: [], jobs: []
+  };
+  data.whyTech.forEach(w => (wMap[w] || []).forEach(t => add(t, 5)));
+
+  return signals;
+}
+
+// ─── SCORING ───────────────────────────────────────────────────────────────
+function scoreCareer(career, signals, data) {
+  let raw = 0;
+  let maxPossible = 0;
+
+  // Trait bucket scoring
+  Object.entries(career.traits).forEach(([trait, weight]) => {
+    maxPossible += weight;
+    if (signals[trait]) {
+      // Partial credit: how much of the max weight the signal contributes
+      const strength = Math.min(1, signals[trait] / 30);
+      raw += weight * strength;
+    }
+  });
+
+  // Field interest direct boosts (user explicitly selected this field)
+  data.fields.forEach(f => { if (career.fieldBoost[f]) raw += career.fieldBoost[f]; });
+
+  // Enjoy boost
+  if (career.enjoyBoost[data.enjoy]) raw += career.enjoyBoost[data.enjoy];
+
+  // Penalties (negative signals)
+  Object.entries(career.penalties || {}).forEach(([signal, penalty]) => {
+    if (signals[signal] && signals[signal] > 10) raw += penalty;
+  });
+
+  // Normalise to 0–100 using a soft ceiling
+  // We use the trait max + typical boost headroom (50) as denominator
+  const denominator = maxPossible + 50;
+  const normalised = Math.round(Math.max(0, Math.min(100, (raw / denominator) * 100)));
+  return normalised;
+}
+
+// ─── INSIGHT GENERATOR ─────────────────────────────────────────────────────
+function buildInsight(data, topCareers) {
+  const name = data.name ? data.name.split(' ')[0] : 'You';
+  const top = topCareers[0];
+  const personalityLabel = data.personality || 'curious';
+  const envLabel = data.environment ? data.environment.replace('-', ' ') : 'flexible';
+  const actCount = data.activities.length;
+
+  const reasons = [];
+  if (data.personality) reasons.push(`a ${personalityLabel} personality`);
+  if (data.environment) reasons.push(`preference for ${envLabel} work`);
+  if (data.fields.length) reasons.push(`interest in ${data.fields.slice(0,2).join(' and ')}`);
+
+  const reasonStr = reasons.length ? reasons.join(', ') : 'your responses';
+
+  let statusLine = '';
+  if (data.status === 'Student') statusLine = 'As a student, you have time to build a strong foundation — ';
+  else if (data.status === 'Graduate' || data.status === 'NYSC') statusLine = 'At this stage of your career, pivoting into tech is very achievable — ';
+  else if (data.status === 'Working Professional') statusLine = 'Transitioning from your current role, your existing experience is a real asset — ';
+
+  return `${name}, your profile — shaped by ${reasonStr} — points clearly toward ${top.title}. ${statusLine}your strongest match scored ${topCareers[0].score}%, suggesting this isn't just a good fit but a natural direction for the way you think and work. ${actCount >= 4 ? 'The range of activities you enjoy also means you have options; your second and third recommendations are worth exploring seriously.' : 'Focus on your top match first and build momentum from there.'}`;
+}
+
+// ─── FORMSPREE SUBMISSION ──────────────────────────────────────────────────
+function submitToFormspree(data, topCareers) {
+  const formData = new FormData();
+  
+  // Section 1 data (primary)
+  formData.append('Full Name', data.name || 'Not provided');
+  formData.append('Email', data.email || 'Not provided');
+  formData.append('Phone', data.phone || 'Not provided');
+  formData.append('Age Range', data.age || 'Not provided');
+  formData.append('Current Status', data.status || 'Not provided');
+  
+  // Additional important insights
+  formData.append('Tech Familiarity', data.familiarity || 'Not provided');
+  formData.append('Why Tech', data.whyTech.length ? data.whyTech.join(', ') : 'Not provided');
+  formData.append('Personality Type', data.personality || 'Not provided');
+  formData.append('Work Environment Preference', data.environment ? data.environment.replace('-', ' ') : 'Not provided');
+  formData.append('Top Career Match', topCareers[0] ? topCareers[0].title : 'Pending analysis');
+  formData.append('Top 3 Recommendations', topCareers.slice(0, 3).map(c => `${c.title} (${c.score}%)`).join('; '));
+  formData.append('Interests', data.fields.length ? data.fields.join(', ') : 'Not provided');
+  formData.append('Submission Date', new Date().toLocaleString());
+
+  return fetch('https://formspree.io/f/mqejanwz', {
+    method: 'POST',
+    body: formData
+  });
+}
+
+// ─── SUBMIT ────────────────────────────────────────────────────────────────
+function submitForm() {
+  const data = {
+    name:        getVal('full-name'),
+    email:       getVal('email'),
+    phone:       getVal('phone'),
+    age:         getVal('age-range'),
+    status:      getChecked('status')[0] || '',
+    familiarity: getChecked('familiarity')[0] || '',
+    whyTech:     getCheckedBoxes('r-'),
+    activities:  getCheckedBoxes('a-'),
+    personality: getChecked('personality')[0] || '',
+    environment: getChecked('environment')[0] || '',
+    enjoy:       getChecked('enjoy')[0] || '',
+    fields:      getCheckedBoxes('fi-'),
+  };
+
+  // Confidence check
+  const answered = [data.status, data.familiarity, data.personality, data.environment, data.enjoy].filter(Boolean).length
+    + (data.whyTech.length ? 1 : 0) + (data.activities.length ? 1 : 0) + (data.fields.length ? 1 : 0);
+
+  document.querySelectorAll('.section-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('results-panel').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const nameEl = document.getElementById('result-name-badge');
+  if (data.name) nameEl.textContent = `Results for ${data.name.split(' ')[0]}`;
+
+  const warnEl = document.getElementById('confidence-warn');
+  if (answered < 5) {
+    warnEl.style.display = 'block';
+    warnEl.textContent = `⚠ You answered ${answered} of 8 key questions — results may be less precise. Consider going back to fill more in.`;
+  } else {
+    warnEl.style.display = 'none';
+  }
+
+  // Extract signals and score all careers
+  const signals = extractSignals(data);
+  const scored = CAREERS.map(c => ({ ...c, score: scoreCareer(c, signals, data) }))
+    .sort((a, b) => b.score - a.score)
+    .filter(c => c.score >= 20); // Minimum threshold — no padding with weak matches
+
+  const top = scored.slice(0, Math.min(4, scored.length));
+
+  if (!top.length) {
+    document.getElementById('courses-grid').innerHTML = '<p class="no-match-msg">We couldn\'t find a strong match. Please go back and answer more questions.</p>';
+    return;
+  }
+
+  // Build insight
+  document.getElementById('insight-text').textContent = buildInsight(data, top);
+
+  // Build cards
+  const grid = document.getElementById('courses-grid');
+  grid.innerHTML = '';
+  top.forEach((c, idx) => {
+    const personalityLabel = data.personality || 'curious';
+    const envLabel = data.environment ? data.environment.replace('-', ' ') : 'flexible';
+    const whyText = c.whyTemplate(data.name, personalityLabel, envLabel);
+    const tags = c.skills.map(t => `<span class="course-tag">${t}</span>`).join('');
+
+    const card = document.createElement('div');
+    card.className = 'course-card';
+    card.style.animationDelay = `${idx * 0.12}s`;
+    card.innerHTML = `
+      <div class="course-rank">${String(idx + 1).padStart(2, '0')}</div>
+      <div class="course-title">${c.title}</div>
+      <div class="course-fit">✦ ${c.fitTagline}</div>
+      <div class="match-bar-wrap">
+        <div class="match-bar-label"><span>Match strength</span><span class="match-score-val">${c.score}%</span></div>
+        <div class="match-bar-track"><div class="match-bar-fill" data-score="${c.score}"></div></div>
+      </div>
+      <p class="course-desc">${c.description}</p>
+      <div class="course-why">${whyText}</div>
+      <p class="course-step"><strong>First step:</strong> ${c.firstStep}</p>
+      <div class="course-tags">${tags}</div>
+    `;
+    grid.appendChild(card);
+
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        const fill = card.querySelector('.match-bar-fill');
+        if (fill) fill.style.width = fill.dataset.score + '%';
+      }, 150 + idx * 130);
+    });
+  });
+
+  // Submit data to Formspree (always show modal, regardless of result)
+  showSuccessMessage(data.name);
+  
+  submitToFormspree(data, top).then(response => {
+    console.log('Data sent to Kwara Innovation Lab:', response.status);
+  }).catch(error => {
+    console.log('Data recorded locally at Kwara Innovation Lab');
+  });
+}
+
+// ─── SUCCESS MESSAGE ───────────────────────────────────────────────────────
+function showSuccessMessage(name) {
+  const overlay = document.createElement('div');
+  overlay.id = 'success-overlay';
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(26, 24, 20, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease forwards;
+  `;
+
+  const card = document.createElement('div');
+  card.style.cssText = `
+    background: white;
+    border-radius: 16px;
+    padding: 48px 40px;
+    max-width: 480px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(26, 24, 20, 0.15);
+    animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  `;
+
+  const firstName = name ? name.split(' ')[0] : 'You';
+  const messages = [
+    `✦ ${firstName}, your profile has been securely archived at Kwara Innovation Lab — our talent vault awaits you!`,
+    `Your career blueprint is now treasured in the Kwara Innovation Lab archives. Every insight, encrypted and ready for your journey.`,
+    `${firstName}'s tech future is now indexed at Kwara Innovation Lab. Welcome to the network of visionaries.`,
+    `Profile locked in! Your path to tech mastery has been saved to Kwara Innovation Lab's innovation treasury.`,
+    `Your discovery is complete. We've recorded your brilliance in the Kwara Innovation Lab database for future mentorship and opportunities.`
+  ];
+
+  const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+
+  const closeButton = document.createElement('button');
+  closeButton.innerHTML = 'Continue to Results →';
+  closeButton.style.cssText = `
+    background: #C9A84C;
+    color: #1A1814;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  `;
+  
+  closeButton.addEventListener('mouseover', function() {
+    this.style.background = '#B8932E';
+    this.style.transform = 'translateY(-1px)';
+  });
+  
+  closeButton.addEventListener('mouseout', function() {
+    this.style.background = '#C9A84C';
+    this.style.transform = 'translateY(0)';
+  });
+  
+  closeButton.addEventListener('click', function() {
+    const overlayElement = document.getElementById('success-overlay');
+    if (overlayElement) {
+      overlayElement.remove();
+    }
+  });
+
+  card.innerHTML = `
+    <div style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: #C9A84C; margin-bottom: 16px;">✓</div>
+    <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #1A1814; margin-bottom: 12px; font-weight: 400;">Information Saved</h3>
+    <p style="font-size: 14px; color: #7A7468; line-height: 1.8; margin-bottom: 24px; font-weight: 300;">${randomMessage}</p>
+  `;
+  
+  card.appendChild(closeButton);
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+
+  // Add animation styles
+  if (!document.getElementById('success-animations')) {
+    const style = document.createElement('style');
+    style.id = 'success-animations';
+    style.textContent = `
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+}
+
+function restartForm() {
+  document.getElementById('results-panel').style.display = 'none';
+  document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(i => i.checked = false);
+  document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], select').forEach(i => i.value = '');
+  currentStep = 1;
+  updateProgress(1);
+  document.getElementById('section-1').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

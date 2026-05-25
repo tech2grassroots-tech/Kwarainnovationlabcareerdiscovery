@@ -1,0 +1,9 @@
+{
+  "name": "kwara-career-discovery",
+  "version": "1.0.0",
+  "description": "Kwara Innovation Lab Tech Career Discovery Platform",
+  "private": true,
+  "engines": {
+    "node": "18.x"
+  }
+}
